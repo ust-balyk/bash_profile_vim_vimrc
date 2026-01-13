@@ -1,24 +1,21 @@
-# изменить настройки и перезапустить finder
-# defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder
-#!/opt/local/bin/bash
-export BASH_SILENCE_DEPRECATION_WARNING=1 #          > .hushlogin - убрать предупреждения
-# sudo port selfupdate & sudo port install coreutils
-export PATH="/opt/local/libexec/gnubin:$PATH" # использовать инструменты GNU по умолчанию
-export PATH="/opt/local/bin:/opt/local/sbin:$PATH" #              macports bash/coreutils
-export PATH="/Applications/MAMP/bin/php/php8.3.28/bin:$PATH" #                       mamp
-#export PATH="/usr/local/mysql/bin:$PATH" #                                          mysql
-#export PATH="/users/master/script:$PATH" #                                    bash script
-#eval "$(/usr/local/bin/brew shellenv)" #                                             brew                      
-printf "\e[8;33;120t" #                                                      размеры окна
+#!/bin/bash
+export BASH_SILENCE_DEPRECATION_WARNING=1 && > .hushlogin
+export PATH="/Applications/MAMP/bin/php/php8.3.14/bin:$PATH"
+export PATH="/Applications/MAMP/bin/php/php8.3.28/bin:$PATH"
+export PATH="/users/master/script:$PATH"
+#eval "$(/usr/local/bin/brew shellenv)"                      
+printf "\e[8;33;120t"
 
 ######
 PS1="\n    " ; PS2="  "
 
 ######
-alias p="cd ~ && vim .bash_profile" ; alias p.=". ~/.bash_profile ; exit"
-
+alias p="cd ~ && vim .bash_profile"
+alias p.=". ~/.bash_profile ; defaults write com.apple.finder AppleShowAllFiles -bool true ;
+        killall Finder ; exit"
 _p() {
     { rsync --archive --delete ~/.bash_profile ~/.b_p.copy/ ;
+      rsync --archive --delete ~/.bash_profile ~/profile/ ;
       rsync --archive --delete ~/.vimrc ~/.b_p.copy/ ;
       rsync --archive --delete ~/.vim ~/.b_p.copy/ ; } &&
       printf "\n${COLOR}  создана локальная копия файла${RESET}\n" || printf "\n  $?\n"
@@ -31,7 +28,6 @@ _p() {
         printf "\e[1;31m  ф л е ш - н а к о п и т е л ь   н е   н а й д е н\e[0m\n"
     fi
 }
-
 p_() {
     if [ -e ~/.b_p.copy ] ; then
         { rsync --archive --delete ~/.b_p.copy/.bash_profile ~/.bash_profile ;
@@ -55,7 +51,6 @@ p_() {
 
 ######
 export PATH="$PATH:/users/master/pascal"
-
 pc() { 
     fpc $1 # free pascal compiler
     if test $PWD/*.o ; then
@@ -109,6 +104,9 @@ alias sas="sudo apachectl stop"
 alias sar="sudo apachectl restart"
 
 ######
+alias l="ls -Fla | sort -r";
+
+######
 #alias sites="clear && cd ~/sites && gls -lhF --group-directories-first -lia"
 alias sites="networksetup -setairportpower en0 on && open -a \"Google Chrome.app\" http://localhost:80 ;
              sleep 4 ;
@@ -141,9 +139,13 @@ alias wr="osascript -e 'tell application \"Google Chrome.app\"
                         end tell'"
 
 #####
-alias mamp="open -a 'MAMP.app'"
-alias master="clear ; cd /Applications/MAMP/htdocs/master && gls -lhF --group-directories-first -lia"
-alias parser="clear ; cd /Applications/MAMP/htdocs/parser && gls -lhF --group-directories-first -lia"
+alias mamp="open -a 'MAMP.app' && sleep 3 &&
+            osascript -e 'tell application \"Terminal.app\" to activate' && clear &&
+            cd /Applications/MAMP/htdocs/Master && path_test"
+
+#alias master="clear ; cd /Applications/MAMP/htdocs/master && gls -lhF --group-directories-first -lia"
+#alias parser="clear ; cd /Applications/MAMP/htdocs/parser && gls -lhF --group-directories-first -lia"
+alias master="clear ; cd /Applications/MAMP/htdocs/master && l"
 
 _master() {
     if [ ! -e /volumes/usb ] ; then
@@ -197,7 +199,8 @@ parser_() {
 alias mamp_log="cd /Applications/MAMP/logs && vim apache_error.log"
 
 #####
-alias usb="cd /Volumes/usb && gls -lhF --group-directories-first -lia"
+#alias usb="cd /Volumes/usb && gls -lhF --group-directories-first -lia"
+alias usb="cd /Volumes/usb && l"
 
 _usb() {
     test -e /volumes/usb && 
@@ -304,7 +307,12 @@ RESET="$(tput sgr0)" # сбросить атрибуты "[0"
 
 home_() { clear && echo "    ${STYLE}${COLOR}${HOME##*/}${RESET}" && ls -F ; }
 
-_pwd() { clear && echo "    ${STYLE}${COLOR}${PWD}${RESET}" && gls -lhF --group-directories-first -lia ; }
+_pwd() {
+    clear && echo "    ${STYLE}${COLOR}${PWD}${RESET}" &&
+    ls -Fla | sort -r
+} 
+#-1Fa ; } #ls -x #ls -Fla | awk '{print $0, $11}' | sort -r
+#gls -lhF --group-directories-first -lia ; }
 
 path_test() { [ $PWD == $HOME ] && home_ || _pwd ; }
 
@@ -338,7 +346,7 @@ ch_() {
 }
 
 ######
-alias ls="gls -hF --group-directories-first"
+#alias ls="gls -hF --group-directories-first"
 
 ######
 md() {
@@ -531,17 +539,8 @@ f() {
 
 f_() { test "$@" && { cd "$@" && _pwd ; } || { _pwd ; } ; }
 
-_f() { cd .. && path_test ; }
-
-alias ..="cd .. && path_test"
+_f() { cd .. && path_test ; } ; alias ..="cd .. && path_test"
 
 _() { _f ; local _f2 ; _f2() { _f ; } ; _f2 ; }
 
-_fc() { cd .. ; }
-
-_c() { _fc ; local _fc2 ; _fc2() { _fc ; } ; _fc2 ; }
 ######
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
