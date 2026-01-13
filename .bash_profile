@@ -104,7 +104,8 @@ alias sas="sudo apachectl stop"
 alias sar="sudo apachectl restart"
 
 ######
-alias l="ls -Fla | sort -r";
+alias l="ls -Fla | grep \"^d\" && ls -la | grep \"^-\" && ls -la | grep \"^l\"" ;
+#ls -Fla | sort -r";
 
 ######
 #alias sites="clear && cd ~/sites && gls -lhF --group-directories-first -lia"
@@ -309,10 +310,8 @@ home_() { clear && echo "    ${STYLE}${COLOR}${HOME##*/}${RESET}" && ls -F ; }
 
 _pwd() {
     clear && echo "    ${STYLE}${COLOR}${PWD}${RESET}" &&
-    ls -Fla | sort -r
-} 
-#-1Fa ; } #ls -x #ls -Fla | awk '{print $0, $11}' | sort -r
-#gls -lhF --group-directories-first -lia ; }
+    ls -Fla | grep "^d" && ls -la | grep "^-" && ls -la | grep "^l"
+}
 
 path_test() { [ $PWD == $HOME ] && home_ || _pwd ; }
 
