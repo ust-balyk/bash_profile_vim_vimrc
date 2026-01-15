@@ -2,6 +2,7 @@
 export BASH_SILENCE_DEPRECATION_WARNING=1 && > .hushlogin
 export PATH="/Applications/MAMP/bin/php/php8.3.14/bin:$PATH"
 export PATH="/Applications/MAMP/bin/php/php8.3.28/bin:$PATH"
+export PATH="/usr/local/mysql/bin:$PATH"
 export PATH="/users/master/script:$PATH"
 #eval "$(/usr/local/bin/brew shellenv)"                      
 printf "\e[8;33;120t"
@@ -121,7 +122,7 @@ _sites() {
         rsync --archive --delete ~/sites/ /volumes/usb/sites/ &&
             printf "\n  создана флеш копия файла\n"
     fi
-    rsync --archive --delete --exclude='.local/' ~/sites/ ~/.sites-copy/ &&
+    rsync --archive --delete ~/sites/ ~/.sites-copy/ &&
         printf "  создана локальная копия файла\n"
         
 }
@@ -144,9 +145,7 @@ alias mamp="open -a 'MAMP.app' && sleep 3 &&
             osascript -e 'tell application \"Terminal.app\" to activate' && clear &&
             cd /Applications/MAMP/htdocs/Master && path_test"
 
-#alias master="clear ; cd /Applications/MAMP/htdocs/master && gls -lhF --group-directories-first -lia"
-#alias parser="clear ; cd /Applications/MAMP/htdocs/parser && gls -lhF --group-directories-first -lia"
-alias master="clear ; cd /Applications/MAMP/htdocs/master && l"
+alias master="clear ; cd /Applications/MAMP/htdocs/master && _pwd"
 
 _master() {
     if [ ! -e /volumes/usb ] ; then
@@ -178,6 +177,8 @@ master_() {
     fi
 }
 
+alias parser="clear ; cd /Applications/MAMP/htdocs/parser && _pwd"
+
 _parser() {
     if [ ! -e /volumes/usb ] ; then
         printf "\n\e[1;31m  ф л е ш - н а к о п и т е л ь   н е   н а й д е н\e[0m\n"
@@ -200,8 +201,7 @@ parser_() {
 alias mamp_log="cd /Applications/MAMP/logs && vim apache_error.log"
 
 #####
-#alias usb="cd /Volumes/usb && gls -lhF --group-directories-first -lia"
-alias usb="cd /Volumes/usb && l"
+alias usb="cd /Volumes/usb && _pwd"
 
 _usb() {
     test -e /volumes/usb && 
@@ -310,7 +310,7 @@ home_() { clear && echo "    ${STYLE}${COLOR}${HOME##*/}${RESET}" && ls -F ; }
 
 _pwd() {
     clear && echo "    ${STYLE}${COLOR}${PWD}${RESET}" &&
-    ls -Fla | grep "^d" && ls -la | grep "^-" && ls -la | grep "^l"
+    ls -Fla | grep "^d" && ls -la |  grep "^-" && ls -la | grep "^l"
 }
 
 path_test() { [ $PWD == $HOME ] && home_ || _pwd ; }
