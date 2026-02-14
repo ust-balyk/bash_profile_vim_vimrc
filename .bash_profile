@@ -4,7 +4,6 @@ export PATH="/Applications/MAMP/bin/php/php8.3.14/bin:$PATH"
 export PATH="/Applications/MAMP/bin/php/php8.3.28/bin:$PATH"
 export PATH="/usr/local/mysql/bin:$PATH"
 export PATH="/users/master/script:$PATH"
-#eval "$(/usr/local/bin/brew shellenv)"                      
 printf "\e[8;33;120t"
 
 ######
@@ -60,13 +59,13 @@ pc() {
 }
 
 ######
-alias o_="printf '\e[8;35;121t'" #                                      развернуть окно терминала
-alias z_="printf '\e[8;12;121t'" #                                                  свернуть окно
-alias u_="printf '\e[2t'" #                                                         убрать в Dock
-alias e_="exit" #                                                                закрыть терминал
-alias q_="osascript -e 'tell application \"Terminal\" to quit'" #                закрыть терминал
-alias s_="osascript -e 'tell application \"System Events\" to sleep'" #            усыпить машину
-alias d_="osascript -e 'tell application \"System Events\" to shut down' & exit" #      выключить
+alias o="printf '\e[8;35;121t'" #                                      развернуть окно терминала
+alias z="printf '\e[8;12;121t'" #                                                  свернуть окно
+alias u="printf '\e[2t'" #                                                         убрать в Dock
+alias e="exit" #                                                                закрыть терминал
+alias q="osascript -e 'tell application \"Terminal\" to quit'" #                закрыть терминал
+alias s="osascript -e 'tell application \"System Events\" to sleep'" #            усыпить машину
+alias d="osascript -e 'tell application \"System Events\" to shut down' & exit" #      выключить
 
 ######
 alias sudo="sudo " # использовать псевдоним
@@ -106,11 +105,9 @@ alias sar="sudo apachectl restart"
 
 ######
 alias l="ls -Fla | grep \"^d\" && ls -la | grep \"^-\" && ls -la | grep \"^l\"" ;
-#ls -Fla | sort -r";
 
 ######
-#alias sites="clear && cd ~/sites && gls -lhF --group-directories-first -lia"
-alias sites="networksetup -setairportpower en0 on && open -a \"Google Chrome.app\" http://localhost:80 ;
+alias sites="networksetup -setairportpower en0 on && open -a \"ff.app\" http://localhost:80 ;
              sleep 4 ;
              osascript -e 'tell application \"Terminal.app\" to activate' ;
              clear ; cd ~/Sites && path_test" 
@@ -134,7 +131,7 @@ sites_() {
 }
 
 ##### перезагрузить активное окно браузера
-alias wr="osascript -e 'tell application \"Google Chrome.app\"
+alias wr="osascript -e 'tell application \"ff.app\"
                             tell the active tab of its first window
                                 reload
                             end tell
@@ -232,13 +229,21 @@ cp_home() {
 ######
 rec_() {
     dir_=$(PWD) && cd ~/Movies
-    if [ ! -e rec/ ] ; then
-      mkdir rec && cd rec && screencapture -v -g "$1.mp4"
+    if [ ! -e rec/ ] ; then mkdir rec && cd rec
+      if [ ! -e "$1" ] ; then
+        screencapture -v -g  "$RANDOM.mp4"
+      fi
     else
-      cd rec && screencapture -v -g "$1.mp4"
+      cd rec
+      if [ ! "$1" ] ; then
+        screencapture -v -g  "$RANDOM.mp4"
+      else
+        screencapture -v -g "$1.mp4"
+      fi
     fi
     cd $dir_ && echo "    ${STYLE}${COLOR}${PWD}${RESET}" && ls -F
 }
+
 qtp_() {
     open -a 'QuickTime Player' "$1.mp4"
 }
@@ -249,22 +254,10 @@ alias ml="networksetup -setairportpower en0 on && open -a Mail"
 alias mlq="pkill Mail"
 
 ######
-alias gx="open -a 'Opera GX.app'"
-alias gxl="open -a 'MAMP.app' && sleep 6 &&
-    networksetup -setairportpower en0 on && open -a 'Opera GX.app' http://localhost:8888"
-alias gxq="osascript -e 'tell application \"Opera GX.app\" to quit'"
-
-######
 alias ff="networksetup -setairportpower en0 on && open -a \"Firefox DE.app\""
 alias ffl="open -a 'MAMP.app' && sleep 6 &&
     open -a \"Firefox DE.app\" http://localhost:8888"
 alias ffq="osascript -e 'tell application \"Firefox DE.app\" to quit'"
-
-######
-alias gg="networksetup -setairportpower en0 on && open -a \"Google Chrome.app\""
-alias ggl="open -a 'MAMP.app' && sleep 6 &&
-    open -a Google.app http://localhost:8888"
-alias ggq="osascript -e 'tell application \"Google Chrome.app\" to quit'"
 
 ######
 alias te="networksetup -setairportpower en0 on && open -a Telegram"
@@ -343,9 +336,6 @@ ch_() {
     sudo purge # clear RAM and disk cache
     cd - ; path_test
 }
-
-######
-#alias ls="gls -hF --group-directories-first"
 
 ######
 md() {
