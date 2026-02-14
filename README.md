@@ -1,1 +1,3 @@
-# bash_profile_vim_vimrc
+# vim
+# bash_profile
+# vimrc
