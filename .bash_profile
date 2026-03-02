@@ -1,7 +1,7 @@
 #!/bin/bash
 export BASH_SILENCE_DEPRECATION_WARNING=1 && > .hushlogin
 export PATH="/Applications/MAMP/bin/php/php8.3.14/bin:$PATH"
-export PATH="/Applications/MAMP/bin/php/php8.3.28/bin:$PATH"
+export PATH="/Applications/MAMP/bin/php/php8.3.30/bin:$PATH"
 export PATH="/usr/local/mysql/bin:$PATH"
 export PATH="/users/master/script:$PATH"
 printf "\e[8;33;120t"
@@ -230,18 +230,19 @@ cp_home() {
 rec_() {
     dir_=$(PWD) && cd ~/Movies
     if [ ! -e rec/ ] ; then mkdir rec && cd rec
-      if [ ! -e "$1" ] ; then
+      if [ ! "$1" ] ; then
         screencapture -v -g  "$RANDOM.mp4"
-      fi
+      else
+        screencapture -v -g "$1.mp4"
+      fi ; cd $dir_
     else
       cd rec
       if [ ! "$1" ] ; then
         screencapture -v -g  "$RANDOM.mp4"
       else
         screencapture -v -g "$1.mp4"
-      fi
+      fi ; cd $dir_
     fi
-    cd $dir_ && echo "    ${STYLE}${COLOR}${PWD}${RESET}" && ls -F
 }
 
 qtp_() {
@@ -258,6 +259,12 @@ alias ff="networksetup -setairportpower en0 on && open -a \"Firefox DE.app\""
 alias ffl="open -a 'MAMP.app' && sleep 6 &&
     open -a \"Firefox DE.app\" http://localhost:8888"
 alias ffq="osascript -e 'tell application \"Firefox DE.app\" to quit'"
+
+######
+alias br="networksetup -setairportpower en0 on && open -a \"Brave.app\""
+alias brl="open -a 'MAMP.app' && sleep 6 &&
+    open -a \"Brave.app\" http://localhost:8888"
+alias brq="osascript -e 'tell application \"Brave.app\" to quit'"
 
 ######
 alias te="networksetup -setairportpower en0 on && open -a Telegram"
@@ -286,9 +293,6 @@ alias nt="open -a Notes" ; alias ntq="pkill Notes"
 
 ######
 alias pv="cd ~/documents/books/ && open -a 'Preview.app' $1"
-
-######
-alias io="open -a 'ImageOptim.app'"
 
 ######
 STYLE="$(tput bold)" # "[1"
