@@ -1,8 +1,7 @@
 #!/bin/bash
+export SHELL="/bin/bash"
 export BASH_SILENCE_DEPRECATION_WARNING=1 && > .hushlogin
-export PATH="/Applications/MAMP/bin/php/php8.3.14/bin:$PATH"
 export PATH="/Applications/MAMP/bin/php/php8.3.30/bin:$PATH"
-export PATH="/usr/local/mysql/bin:$PATH"
 export PATH="/users/master/script:$PATH"
 printf "\e[8;33;120t"
 
@@ -181,18 +180,18 @@ _parser() {
         printf "\n\e[1;31m  ф л е ш - н а к о п и т е л ь   н е   н а й д е н\e[0m\n"
     else
         rsync --archive --delete /applications/mamp/htdocs/parser/ /volumes/usb/parser/ &&
-        printf "\n  создана флеш копия файла\n"
+        printf "\n${COLOR}  создана флеш копия файла${RESET}\n"
     fi
     rsync --archive --delete /applications/mamp/htdocs/parser/ ~/parser/ &&
-    printf "  создана локальная копия файла\n"
+    printf "${COLOR}  создана локальная копия файла${RESET}\n"
 }
 
 parser_() {
     test -e /volumes/usb/parser &&
         { rsync --archive --delete /volumes/usb/parser/ /applications/mamp/htdocs/parser/ &&
-            printf "\n  $?\n" ; } ||
+            printf "\n${COLOR}  $?${RESET}\n" ; } ||
         { rsync --archive --delete ~/parser/ /applications/mamp/htdocs/parser/ &&
-            printf "\n  $?\n" ; }
+            printf "\n${COLOR}  $?${RESET}\n" ; }
 }
 
 alias mamp_log="cd /Applications/MAMP/logs && vim apache_error.log"
@@ -202,7 +201,7 @@ alias usb="cd /Volumes/usb && _pwd"
 
 _usb() {
     test -e /volumes/usb && 
-        rsync --archive --delete --progress $PWD /volumes/usb/. || printf "\n  $?\n"
+        rsync --archive --delete --progress $PWD /volumes/usb/. || printf "\n${COLOR}  $?${RESET}\n"
 }
 
 usb_() {
