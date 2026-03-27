@@ -2,6 +2,7 @@
 export SHELL="/bin/bash"
 export BASH_SILENCE_DEPRECATION_WARNING=1 && > .hushlogin
 export PATH="/Applications/MAMP/bin/php/php8.3.30/bin:$PATH"
+export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
 export PATH="/users/master/script:$PATH"
 printf "\e[8;33;120t"
 
@@ -137,7 +138,7 @@ alias wr="osascript -e 'tell application \"ff.app\"
                         end tell'"
 
 #####
-alias mamp="open -a 'MAMP.app' && sleep 3 &&
+alias mamp_="open -a 'MAMP.app' && sleep 3 &&
             osascript -e 'tell application \"Terminal.app\" to activate' && clear &&
             cd /Applications/MAMP/htdocs/Master && path_test"
 
@@ -179,18 +180,20 @@ _parser() {
     if [ ! -e /volumes/usb ] ; then
         printf "\n\e[1;31m  ф л е ш - н а к о п и т е л ь   н е   н а й д е н\e[0m\n"
     else
-        rsync --archive --delete /applications/mamp/htdocs/parser/ /volumes/usb/parser/ &&
+        rsync --archive --delete --exclude='.git/' --exclude='.gitignore' --exclude='README.md' \
+          /applications/mamp/htdocs/parser/ /volumes/usb/parser/ &&
         printf "\n${COLOR}  создана флеш копия файла${RESET}\n"
     fi
-    rsync --archive --delete /applications/mamp/htdocs/parser/ ~/parser/ &&
+    rsync --archive --delete --exclude='.git/' --exclude='.gitignore' --exclude='README.md' \
+      /applications/mamp/htdocs/parser/ ~/parser/ &&
     printf "${COLOR}  создана локальная копия файла${RESET}\n"
 }
 
 parser_() {
+    { rsync --archive --delete ~/parser/ /applications/mamp/htdocs/parser/ &&
+        printf "\n${COLOR}  $?${RESET}\n" ; }
     test -e /volumes/usb/parser &&
         { rsync --archive --delete /volumes/usb/parser/ /applications/mamp/htdocs/parser/ &&
-            printf "\n${COLOR}  $?${RESET}\n" ; } ||
-        { rsync --archive --delete ~/parser/ /applications/mamp/htdocs/parser/ &&
             printf "\n${COLOR}  $?${RESET}\n" ; }
 }
 
@@ -477,6 +480,10 @@ mf() {
 }
 
 ######
+rm () {
+  test $HOME && :
+}
+
 r() {
     if [ "$PWD" == $HOME ] ; then
         if [ -e "$1" -o -h "$1" ] ; then
