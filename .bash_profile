@@ -480,10 +480,6 @@ mf() {
 }
 
 ######
-rm () {
-  test $HOME && :
-}
-
 r() {
     if [ "$PWD" == $HOME ] ; then
         if [ -e "$1" -o -h "$1" ] ; then
