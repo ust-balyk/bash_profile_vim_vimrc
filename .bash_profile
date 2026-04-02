@@ -1,7 +1,8 @@
 #!/bin/bash
 export SHELL="/bin/bash"
 export BASH_SILENCE_DEPRECATION_WARNING=1 && > .hushlogin
-export PATH="/Applications/MAMP/bin/php/php8.3.30/bin:$PATH"
+export PATH="/Applications/MAMP/bin/php/php8.3.28/bin:$PATH"
+#export PATH="/Applications/MAMP/bin/php/php8.3.30/bin:$PATH"
 export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
 export PATH="/users/master/script:$PATH"
 printf "\e[8;33;120t"
@@ -74,9 +75,11 @@ alias sudo="sudo " # использовать псевдоним
 alias ?="which" # найти полный путь к указанным командам или сценариям
 
 ###### kill -9 "номер процесса"
-alias port_="sudo lsof -i -P | grep LISTEN | grep :$PORT"
+alias port_="ps ax"
+alias port_n="sudo lsof -i -P | grep LISTEN | grep :$PORT"
+port_r() { sudo kill -9 "$*" ; }
 
-######
+#####
 alias disk_="diskutil list"
 alias disk_f="printf '\n\033[5m  для форматирования скопируй и измени:\033[0m
             \n  sudo diskutil eraseDisk #format# #name# MBRFormat /dev/disk #disk#
@@ -89,7 +92,6 @@ alias wfr="networksetup -setairportpower en0 off ;
            networksetup -setairportnetwork en0 dot fkmybnfR?0"
 alias wfq="networksetup -setairportpower en0 off"
 alias wf="networksetup -setairportpower en0 on"
-
 ######
 alias v="vim"
 
@@ -107,7 +109,7 @@ alias sar="sudo apachectl restart"
 alias l="ls -Fla | grep \"^d\" && ls -la | grep \"^-\" && ls -la | grep \"^l\"" ;
 
 ######
-alias sites="networksetup -setairportpower en0 on && open -a \"ff.app\" http://localhost:80 ;
+alias sites="networksetup -setairportpower en0 on && open -a \"Firefox DE.app\" http://localhost:80 ;
              sleep 4 ;
              osascript -e 'tell application \"Terminal.app\" to activate' ;
              clear ; cd ~/Sites && path_test" 
@@ -131,14 +133,14 @@ sites_() {
 }
 
 ##### перезагрузить активное окно браузера
-alias wr="osascript -e 'tell application \"ff.app\"
+alias wr="osascript -e 'tell application \"Firefox DE.app\"
                             tell the active tab of its first window
                                 reload
                             end tell
                         end tell'"
 
 #####
-alias mamp_="open -a 'MAMP.app' && sleep 3 &&
+alias mamp="open -a 'MAMP.app' && sleep 3 &&
             osascript -e 'tell application \"Terminal.app\" to activate' && clear &&
             cd /Applications/MAMP/htdocs/Master && path_test"
 
@@ -162,16 +164,16 @@ alias git_="git add . && sleep 3 ;
             git push origin main"
 
 master_() {
-    if [ ! -e /volumes/usb/master ] ; then
+    if [ ! -e /volumes/usb ] ; then
         printf "\n\e[1;31m  ф л е ш - н а к о п и т е л ь   н е   н а й д е н\e[0m\n"
     else
-        { rsync --archive --delete --exclude='.git/' --exclude='.gitignore' --exclude='README.md' \
+        rsync --archive --delete --exclude='.git/' --exclude='.gitignore' --exclude='README.md' \
             /volumes/usb/master/ /applications/mamp/htdocs/master/ &&
-                printf "\n${COLOR}  $?${RESET}\n" ; } || 
-        { rsync --archive --delete --exclude='.git/' --exclude='.gitignore' --exclude='README.md' \
-            ~/master/ /applications/mamp/htdocs/master/ &&
-                printf "\n${COLOR}  $?${RESET}\n" ; }
+              printf "\n${COLOR}  $?${RESET}\n"
     fi
+    rsync --archive --delete --exclude='.git/' --exclude='.gitignore' --exclude='README.md' \
+        ~/master/ /applications/mamp/htdocs/master/ &&
+            printf "\n${COLOR}  $?${RESET}\n"
 }
 
 alias parser="clear ; cd /Applications/MAMP/htdocs/parser && _pwd"
@@ -182,11 +184,11 @@ _parser() {
     else
         rsync --archive --delete --exclude='.git/' --exclude='.gitignore' --exclude='README.md' \
           /applications/mamp/htdocs/parser/ /volumes/usb/parser/ &&
-        printf "\n${COLOR}  создана флеш копия файла${RESET}\n"
+            printf "\n${COLOR}  создана флеш копия файла${RESET}\n"
     fi
     rsync --archive --delete --exclude='.git/' --exclude='.gitignore' --exclude='README.md' \
       /applications/mamp/htdocs/parser/ ~/parser/ &&
-    printf "${COLOR}  создана локальная копия файла${RESET}\n"
+        printf "${COLOR}  создана локальная копия файла${RESET}\n"
 }
 
 parser_() {
@@ -271,14 +273,6 @@ alias brq="osascript -e 'tell application \"Brave.app\" to quit'"
 ######
 alias te="networksetup -setairportpower en0 on && open -a Telegram"
 alias teq="osascript -e 'tell application \"Telegram\" to quit'"
-
-######
-alias wa="networksetup -setairportpower en0 on && open -a WhatsApp.app"
-alias waq="osascript -e 'tell application \"WhatsApp.app\" to quit'"
-
-######
-alias as="open -a 'Android Studio.app'"
-alias asq="osascript -e 'tell application \"Android Studio.app\" to quit'"
 
 ######
 alias vs="open -a 'Visual Studio Code'"
