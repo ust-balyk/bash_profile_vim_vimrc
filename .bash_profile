@@ -2,11 +2,10 @@
 export SHELL="/bin/bash"
 export BASH_SILENCE_DEPRECATION_WARNING=1 && > .hushlogin
 export PATH="/Applications/MAMP/bin/php/php8.3.28/bin:$PATH"
-#export PATH="/Applications/MAMP/bin/php/php8.3.30/bin:$PATH"
 export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
-export PATH="/users/master/script:$PATH"
-printf "\e[8;33;120t"
-
+export PATH="/users/master/pascal:$PATH"
+printf "\e[8;36;122t"
+osascript -e 'tell application "Terminal"' -e 'activate' -e 'set position of front window to {4, 69}' -e 'end tell'   
 ######
 PS1="\n    " ; PS2="  "
 
@@ -147,7 +146,7 @@ alias mamp="open -a 'MAMP.app' && sleep 3 &&
 alias master="clear ; cd /Applications/MAMP/htdocs/master && _pwd"
 
 _master() {
-    if [ ! -e /volumes/usb ] ; then
+    if [ ! -e /volumes/usb/master ] ; then
         printf "\n\e[1;31m  ф л е ш - н а к о п и т е л ь   н е   н а й д е н\e[0m\n"
     else
         rsync --archive --delete --exclude='.git/' --exclude='.gitignore' --exclude='README.md' \
@@ -164,16 +163,15 @@ alias git_="git add . && sleep 3 ;
             git push origin main"
 
 master_() {
-    if [ ! -e /volumes/usb ] ; then
-        printf "\n\e[1;31m  ф л е ш - н а к о п и т е л ь   н е   н а й д е н\e[0m\n"
+    if [ -e /volumes/usb ] ; then
+        rsync --archive --delete --exclude='.git/' --exclude='.gitignore' --exclude='README.md' \
+        /volumes/usb/master/ /applications/mamp/htdocs/master/ &&
+        printf "\n${COLOR}  $?${RESET}\n"
     else
         rsync --archive --delete --exclude='.git/' --exclude='.gitignore' --exclude='README.md' \
-            /volumes/usb/master/ /applications/mamp/htdocs/master/ &&
-              printf "\n${COLOR}  $?${RESET}\n"
-    fi
-    rsync --archive --delete --exclude='.git/' --exclude='.gitignore' --exclude='README.md' \
         ~/master/ /applications/mamp/htdocs/master/ &&
-            printf "\n${COLOR}  $?${RESET}\n"
+        printf "\n${COLOR}  $?${RESET}\n"
+    fi
 }
 
 alias parser="clear ; cd /Applications/MAMP/htdocs/parser && _pwd"
@@ -260,15 +258,15 @@ alias mlq="pkill Mail"
 
 ######
 alias ff="networksetup -setairportpower en0 on && open -a \"Firefox DE.app\""
-alias ffl="open -a 'MAMP.app' && sleep 6 &&
+alias mamp_="open -a 'MAMP.app' && sleep 6 &&
     open -a \"Firefox DE.app\" http://localhost:8888"
 alias ffq="osascript -e 'tell application \"Firefox DE.app\" to quit'"
 
 ######
+alias dd="networksetup -setairportpower en0 on && open -a \"DuckDuckGo.app\""
+
+######
 alias br="networksetup -setairportpower en0 on && open -a \"Brave.app\""
-alias brl="open -a 'MAMP.app' && sleep 6 &&
-    open -a \"Brave.app\" http://localhost:8888"
-alias brq="osascript -e 'tell application \"Brave.app\" to quit'"
 
 ######
 alias te="networksetup -setairportpower en0 on && open -a Telegram"
