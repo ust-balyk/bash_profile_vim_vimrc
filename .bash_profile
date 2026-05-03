@@ -1,11 +1,13 @@
 #!/bin/bash
+######
 export SHELL="/bin/bash"
 export BASH_SILENCE_DEPRECATION_WARNING=1 && > .hushlogin
 export PATH="/Applications/MAMP/bin/php/php8.3.28/bin:$PATH"
-export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
-export PATH="/users/master/pascal:$PATH"
+
+######
 printf "\e[8;36;122t"
 osascript -e 'tell application "Terminal"' -e 'activate' -e 'set position of front window to {4, 69}' -e 'end tell'   
+
 ######
 PS1="\n    " ; PS2="  "
 
@@ -51,7 +53,7 @@ p_() {
 
 ######
 export PATH="$PATH:/users/master/pascal"
-pc() { 
+fpc_() { 
     fpc $1 # free pascal compiler
     if test $PWD/*.o ; then
         rm $PWD/*.o
